@@ -55,4 +55,63 @@ public class StudentsControllerTests
 
 
     // Ajoutez d'autres méthodes de test ici...
+
+    [TestMethod]
+    public async Task Create_Post_ValidModel_ReturnsRedirectToIndex()
+    {
+        // Arrange
+        var student = new Student { Name = "Nouveau Étudiant", Email = "nouveau@example.com", Phone="078888888888" , Subscribed=false };
+
+        // Act
+        var result = await _controller.Create(student);
+
+        // Assert
+        Assert.IsInstanceOfType(result, typeof(RedirectToActionResult), "Le résultat n'est pas du type RedirectToActionResult.");
+        var redirectToActionResult = result as RedirectToActionResult;
+        Assert.IsNotNull(redirectToActionResult, "Le RedirectToActionResult est null.");
+        Assert.AreEqual("Index", redirectToActionResult.ActionName, "L'action de redirection n'est pas Index.");
+    }
+    [TestMethod]
+    public async Task Edit_Post_ValidModel_ReturnsRedirectToIndex()
+    {
+        // Arrange
+        var studentId = Guid.NewGuid();
+        var originalStudent = new Student { Id = studentId, Name = "Étudiant Existante", Email = "existante@example.com", Phone = "0999999999", Subscribed = true };
+        _context.Students.Add(originalStudent);
+        await _context.SaveChangesAsync();
+
+        var updatedStudent = new Student { Id = studentId, Name = "Étudiant Modifié", Email = "modifie@example.com", Phone = "0999999999", Subscribed = false };
+
+        // Detach the original student to avoid tracking issues
+        _context.Entry(originalStudent).State = EntityState.Detached;
+
+        // Act
+        var result = await _controller.Edit(studentId, updatedStudent);
+
+        // Assert
+        Assert.IsInstanceOfType(result, typeof(RedirectToActionResult), "Le résultat n'est pas du type RedirectToActionResult.");
+        var redirectToActionResult = result as RedirectToActionResult;
+        Assert.IsNotNull(redirectToActionResult, "Le RedirectToActionResult est null.");
+        Assert.AreEqual("Index", redirectToActionResult.ActionName, "L'action de redirection n'est pas Index.");
+    }
+
+
+    [TestMethod]
+    public async Task DeleteConfirmed_Post_ValidId_ReturnsRedirectToIndex()
+    {
+        // Arrange
+        var student = new Student { Id = Guid.NewGuid(), Name = "Étudiant à Supprimer", Email = "supprimer@example.com", Phone = "0777777777", Subscribed = true };
+        _context.Students.Add(student);
+        _context.SaveChanges();
+
+        // Act
+        var result = await _controller.DeleteConfirmed(student.Id);
+
+        // Assert
+        Assert.IsInstanceOfType(result, typeof(RedirectToActionResult), "Le résultat n'est pas du type RedirectToActionResult.");
+        var redirectToActionResult = result as RedirectToActionResult;
+        Assert.IsNotNull(redirectToActionResult, "Le RedirectToActionResult est null.");
+        Assert.AreEqual("Index", redirectToActionResult.ActionName, "L'action de redirection n'est pas Index.");
+    }
+
 }
