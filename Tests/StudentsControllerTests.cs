@@ -3,10 +3,10 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StudentPortal.Controllers;
-using StudentPortal.Data;
-using StudentPortal.Data.Entites;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using StudentPortal.Data.Entites;
+using StudentPortal.Data;
 
 [TestClass]
 public class StudentsControllerTests
@@ -24,8 +24,8 @@ public class StudentsControllerTests
         _context = new ApplicationDbContext(options);
 
         // Seed the database with test data
-        _context.Students.Add(new Student { Id = Guid.NewGuid(), Name = "Test1", Email="reda@pfe.com" , Phone="069999999", Subscribed=true  }) ;
-        _context.Students.Add(new Student { Id = Guid.NewGuid(), Name = "Test2", Email = "test@pfe.com", Phone = "069999999", Subscribed = false });
+        _context.Students.Add(new Student { Id = Guid.NewGuid(), Name = "Test1", Email="test@pfe.com" , Phone="06999999" , Subscribed=true });
+        _context.Students.Add(new Student { Id = Guid.NewGuid(), Name = "Test2", Email = "test2@pfe.com", Phone = "06999999", Subscribed = true });
         _context.SaveChanges();
 
         _controller = new StudentsController(_context);
